@@ -1,4 +1,4 @@
-# test
+# BoardGame
 
 ## Project setup
 ```
