@@ -1,11 +1,8 @@
-// routes.js
-import HelloWorld from './components/HelloWorld.vue';
-// import AboutPage from './components/AboutPage.vue';
+import HomePage from './pages/Home.vue';
 
 const routes = [
-  { path: '/', component: HelloWorld },
-//   { path: '/about', component: AboutPage },
-  // Add more routes as needed
+  { path: '/', component: HomePage, meta: { title: 'Home - BoardGame' } },
+  { path: '/adminmenu', component: null, meta: { title: 'Admin Menu - BoardGame' } },
 ];
 
 export default routes;
