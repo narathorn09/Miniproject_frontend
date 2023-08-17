@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:open="open"
-    :title="isChangeForm ? 'Login' : 'Register'"
+    :title="isChangeForm ? 'เข้าสู่ระบบ' : 'สมัครสมาชิก'"
     centered="true"
     :footer="null"
     :width="350"
@@ -16,11 +16,11 @@
         @finish="onLogin"
         @finishFailed="onFinishFailed"
       >
-        <a-form-item label="Username" name="username" labelAlign="left">
+        <a-form-item label="ชื่อผู้ใช้" name="username" labelAlign="left">
           <a-input v-model:value="formState.username" />
         </a-form-item>
 
-        <a-form-item label="Password" name="password" labelAlign="left">
+        <a-form-item label="รหัสผ่าน" name="password" labelAlign="left">
           <a-input-password v-model:value="formState.password" />
         </a-form-item>
 
@@ -41,16 +41,16 @@
         autocomplete="off"
         @finish="onRegis"
       >
-        <a-form-item label="Username" name="username" labelAlign="left">
+        <a-form-item label="ชื่อผู้ใช้" name="username" labelAlign="left">
           <a-input v-model:value="formRegis.username" />
         </a-form-item>
 
-        <a-form-item label="Password" name="password" labelAlign="left">
+        <a-form-item label="รหัสผ่าน" name="password" labelAlign="left">
           <a-input-password v-model:value="formRegis.password" />
         </a-form-item>
 
         <a-form-item
-          label="Confirm Password"
+          label="ยืนยันรหัสผ่าน"
           name="conpassword"
           labelAlign="left"
         >
@@ -174,7 +174,7 @@ export default {
       } catch (error) {
         Swal.fire({
           title: "เข้าสู่ระบบไม่สำเร็จ!",
-          text: "โปรดตรจสอบ username และ password",
+          text: "โปรดตรวจสอบชื่อผู้ใช้ และรหัสผ่านอีกครั้ง",
           icon: "error",
           confirmButtonText: "ตกลง",
         });
