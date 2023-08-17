@@ -5,14 +5,18 @@
     </div>
     <div class="nav-container">
       <a class="link-button" @click="goToHomePage">หน้าแรก</a>
-      <a-button v-if="isAuth" @click="openChildModalFunction"
-        >เข้าสู่ระบบ</a-button>
+      <a-button v-if="isAuth" @click="openChildModalFunction">
+        เข้าสู่ระบบ
+      </a-button>
       <a-dropdown v-if="!isAuth" :placement="bottomRight" arrow>
         <a-button>{{ auth?.username }}</a-button>
         <template #overlay>
           <a-menu>
             <a-menu-item v-if="isAdmin">
-              <a class="link-menu" @click="goToAboutPage">จัดการ</a>
+              <a class="link-menu" @click="goToManageBoardGamePage">จัดการบอร์ดเกม</a>
+            </a-menu-item>
+            <a-menu-item v-if="isAdmin">
+              <a class="link-menu" @click="goToManageUserPage">จัดการผู้ใช้</a>
             </a-menu-item>
             <a-menu-item>
               <a class="link-menu" @click="logout">ออกจากระบบ</a>
@@ -22,23 +26,25 @@
       </a-dropdown>
     </div>
   </a-layout-header>
-  <ModalLogin ref="modalLogin" />
+  <ModalLoginAndRegis ref="modalLogin" />
 </template>
 
 <script>
-import ModalLogin from "./ModalLogin.vue";
+import ModalLoginAndRegis from "./ModalLoginAndRegis.vue";
 
 export default {
   name: "HeaderBar",
   components: {
-    ModalLogin,
+    ModalLoginAndRegis,
   },
+
   data() {
     return {
       isModalOpen: false,
       auth: JSON.parse(localStorage.getItem("auth")),
     };
   },
+
   computed: {
     isAdmin() {
       return this.auth && this.auth.userType === "1";
@@ -52,21 +58,21 @@ export default {
     goToHomePage() {
       this.$router.push("/");
     },
-    goToAboutPage() {
-      this.$router.push("/adminmenu");
+    goToManageBoardGamePage() {
+      this.$router.push("/manage-boardgame");
+    },
+    goToManageUserPage() {
+      this.$router.push("/manage-user");
     },
     logout() {
       localStorage.clear();
-      this.$router.push("/");
       this.$router.go(0);
+      this.$router.push("/");
     },
     openChildModalFunction() {
-      this.$refs.modalLogin.showModal(); // Call the child component's function
+      this.$refs.modalLogin.showModal();
     },
   },
-  // created() {
-
-  // },
 };
 </script>
 
@@ -79,7 +85,6 @@ export default {
   padding-left: 100px;
   padding-right: 100px;
   color: #fff;
-  /* width: 100%; */
 }
 .content-container {
   display: flex;
@@ -90,7 +95,6 @@ export default {
 .nav-container {
   width: auto;
 }
-
 .link-button {
   margin-right: 40px;
   transition: color 0.3s;
