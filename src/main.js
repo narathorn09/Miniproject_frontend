@@ -1,22 +1,22 @@
 import { createApp } from 'vue';
-import App from './App.vue'; // Your root component
-import routes from './routes'; // A file containing your route configurations
-import { createRouter, createWebHistory } from 'vue-router';
+import App from './App.vue';
+import routes from './routes';
+import { createRouter, createWebHistory } from 'vue-router'; 
 import Antd from "ant-design-vue";
 import "./main.css";
 
+const app = createApp(App);
 
-// Create a new VueRouter instance
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-// Create a new Vue app instance
-const app = createApp(App);
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title;
+  next();
+});
 
-// Use Vue Router as a plugin
+app.use(Antd);
 app.use(router);
-// app.use(Antd);
-// Mount the app
-app.use(Antd).mount("#app");
+app.mount('#app');
