@@ -1,6 +1,6 @@
 <template>
   <ImgHeroCover />
-  <a-col style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 150px">
+  <a-col class="input-search-container">
     <a-input-search
       class="input-search"
       size="large"
@@ -8,14 +8,13 @@
       placeholder="ค้นหาบอร์ดเกม"
       @search="onSearch"
     />
-    <!-- <span>จำนวนบอร์ดเกมที่พบ {{ boardGameData?.length }}</span> -->
   </a-col>
 
-  <div v-if="isHaveBoardGameData" style="margin-top: -130px;">
+  <div v-if="isHaveBoardGameData" class="card-container">
     <div
       v-for="(game, index) in boardGameData"
       :key="index"
-      style="margin-top: 10px"
+      class="card-content"
     >
       <CardBoardGame
         :title="game.title"
@@ -27,10 +26,7 @@
     </div>
   </div>
 
-  <a-empty
-    v-else-if="!isHaveBoardGameData"
-    style="height: 200px; justify-content: center; align-self: center"
-  >
+  <a-empty v-else-if="!isHaveBoardGameData" class="empty-container">
     <template #description>
       <span> ไม่พบบอร์ดเกมที่ค้นหา </span>
     </template>
@@ -48,27 +44,18 @@ export default {
     CardBoardGame,
     ImgHeroCover,
   },
+
   data() {
     return {
       searchValue: "",
-      boardGamesSearch: [],
       boardGameData: null,
     };
   },
 
   computed: {
-    searchResults() {
-      if (!this.value) {
-        return this.boardGameData;
-      }
-      const searchTerm = this.value.toLowerCase();
-      return this.boardGameData.filter((game) =>
-        game.title.toLowerCase().includes(searchTerm)
-      );
-    },
-    isHaveBoardGameData(){
+    isHaveBoardGameData() {
       return this.boardGameData?.length > 0 ? true : false;
-    }
+    },
   },
 
   methods: {
@@ -81,9 +68,9 @@ export default {
       }
     },
 
-    async onSearch(newValue) {
+    async onSearch(titleValue) {
       try {
-        this.searchValue = newValue;
+        this.searchValue = titleValue;
         const response = await request.get("/searchBoardGame", {
           params: {
             title: this.searchValue,
@@ -91,22 +78,42 @@ export default {
         });
         this.boardGameData = response.data;
       } catch (error) {
-        console.error("Error fetching board game data:", error);
+        console.error("Error search board game data:", error);
       }
     },
   },
 
   created() {
-    // Fetch data when the component is created
     this.fetchBoardGameData();
   },
 };
 </script>
 
 <style scoped>
+.input-search-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* height: 150px; */
+}
 .input-search {
   width: 50%;
-  font-family: "Prompt", sans-serif;
-  margin-top: -360px;
+  top: -150px;
+  z-index: 2;
+  height: 0px;
+  position: relative;
+  transform: scale(1.2);
+}
+.card-container {
+  /* margin-top: -130px; */
+}
+.card-content {
+  margin-top: 10px;
+}
+.empty-container {
+  height: 200px;
+  justify-content: center;
+  align-self: center;
 }
 </style>
