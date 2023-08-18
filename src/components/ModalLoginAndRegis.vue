@@ -41,11 +41,21 @@
         autocomplete="off"
         @finish="onRegis"
       >
-        <a-form-item label="ชื่อผู้ใช้" name="username" labelAlign="left">
+        <a-form-item
+          label="ชื่อผู้ใช้"
+          name="username"
+          labelAlign="left"
+          :rules="usernameRules"
+        >
           <a-input v-model:value="formRegis.username" />
         </a-form-item>
 
-        <a-form-item label="รหัสผ่าน" name="password" labelAlign="left">
+        <a-form-item
+          label="รหัสผ่าน"
+          name="password"
+          labelAlign="left"
+          :rules="[{ required: true, message: 'กรุณากรอกรหัสผ่าน!' }]"
+        >
           <a-input-password v-model:value="formRegis.password" />
         </a-form-item>
 
@@ -53,6 +63,7 @@
           label="ยืนยันรหัสผ่าน"
           name="conpassword"
           labelAlign="left"
+          :rules="conPassRules"
         >
           <a-input-password v-model:value="formRegis.conpassword" />
         </a-form-item>
@@ -104,6 +115,30 @@ export default {
         this.formRegis.username === ""
       );
     },
+
+    usernameRules() {
+      const rules = [
+        { required: true, message: "กรุณากรอกชื่อผู้ใช้!" },
+        {
+          validator: this.validateUsernamePromise,
+          trigger: "change",
+        },
+      ];
+
+      return rules;
+    },
+
+    conPassRules() {
+      const rules = [
+        { required: true, message: "กรุณายืนยันรหัสผ่าน!" },
+        {
+          validator: this.validatePasswordPromise,
+          trigger: "change",
+        },
+      ];
+
+      return rules;
+    },
   },
   methods: {
     showModal() {
@@ -124,6 +159,37 @@ export default {
       this.formState.password = "";
     },
 
+    async handleUsernameChange(value) {
+      try {
+        const response = await request.get("/checkUsername", {
+          params: {
+            username: value,
+          },
+        });
+        if (response.status == 200) return response.data;
+      } catch (error) {
+        console.error("Error Check Username:", error);
+      }
+    },
+
+    async validateUsernamePromise(__, value) {
+      let result = await this.handleUsernameChange(value);
+      if (!result) {
+        return Promise.resolve();
+      }
+      return Promise.reject("ชื่อผู้ใช้ไม่สามารถใช้งานได้");
+    },
+
+    async validatePasswordPromise() {
+      let result =
+        this.formRegis.password !== this.formRegis.conpassword &&
+        this.formRegis.conpassword !== "";
+      if (result) {
+        return Promise.reject("รหัสผ่านไม่ตรงกัน");
+      }
+      return Promise.resolve();
+    },
+
     async onRegis(values) {
       const data = { ...values, userType: "0" };
       try {
@@ -133,6 +199,7 @@ export default {
             title: "สมัครสมาชิกสำเร็จ!",
             icon: "success",
             confirmButtonText: "ตกลง",
+            timer: 1000,
           });
           this.isChangeForm = !this.isChangeForm;
           this.resteForm();
@@ -166,6 +233,7 @@ export default {
             title: "เข้าสู่ระบบสำเร็จ!",
             icon: "success",
             confirmButtonText: "ตกลง",
+            timer: 1000,
           }).then(() => {
             localStorage.setItem("auth", JSON.stringify(response.data));
             this.$router.go(0);
