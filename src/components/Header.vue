@@ -66,8 +66,11 @@ export default {
     },
     logout() {
       localStorage.clear();
-      this.$router.go(0);
-      this.$router.push("/");
+      // this.$router.go(0);
+      // window.location.reload();
+      // this.$router.push("/");
+      this.$router.go("/");
+      
     },
     openChildModalFunction() {
       this.$refs.modalLogin.showModal();
