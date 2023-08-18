@@ -15,10 +15,10 @@
       </a-form-item>
 
       <a-form-item label="บทบาท" name="userType" labelAlign="left">
-        <a-radio-group v-model:value="formState.userType">
-          <a-radio :value="1">แอดมิน</a-radio>
-          <a-radio :value="0">สมาชิก</a-radio>
-        </a-radio-group>
+        <a-select v-model:value="formState.userType" class="select">
+          <a-select-option value="0">สมาชิก</a-select-option>
+          <a-select-option value="1">แอดมิน</a-select-option>
+        </a-select>
       </a-form-item>
 
       <a-form-item :wrapper-col="{ offset: 0, span: 24 }">
@@ -121,5 +121,8 @@ export default {
 }
 .button-cancel {
   margin-left: 10px;
+}
+.select {
+  width: 120px;
 }
 </style>
