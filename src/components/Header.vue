@@ -1,6 +1,7 @@
 <template>
   <a-layout-header class="main-container">
     <div class="content-container">
+      <img src="@/assets/logoBonto.png" alt="BoardGameBonto Logo" class="img-logo"/>
       <span>BoardGameBonto</span>
     </div>
     <div class="nav-container">
@@ -66,8 +67,11 @@ export default {
     },
     logout() {
       localStorage.clear();
-      this.$router.go(0);
-      this.$router.push("/");
+      // this.$router.go(0);
+      // window.location.reload();
+      // this.$router.push("/");
+      this.$router.go("/");
+      
     },
     openChildModalFunction() {
       this.$refs.modalLogin.showModal();
@@ -104,5 +108,10 @@ export default {
 }
 .link-menu:hover{
   text-decoration: none;
+}
+.img-logo{
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
 }
 </style>

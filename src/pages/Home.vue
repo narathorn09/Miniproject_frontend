@@ -6,7 +6,7 @@
       size="large"
       v-model:value="searchValue"
       placeholder="ค้นหาบอร์ดเกม"
-      @search="onSearch"
+      @change="onSearch"
     />
   </a-col>
 
@@ -17,6 +17,7 @@
       class="card-content"
     >
       <CardBoardGame
+        :gameId="game.gameID"
         :title="game.title"
         :description="game.description"
         :photoData="game.photoData"
@@ -68,9 +69,9 @@ export default {
       }
     },
 
-    async onSearch(titleValue) {
+    async onSearch(event) {
       try {
-        this.searchValue = titleValue;
+        this.searchValue = event.target.value;
         const response = await request.get("/searchBoardGame", {
           params: {
             title: this.searchValue,
@@ -112,6 +113,7 @@ export default {
   margin-top: 10px;
 }
 .empty-container {
+  margin-top: 50px;
   height: 200px;
   justify-content: center;
   align-self: center;

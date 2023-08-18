@@ -11,6 +11,7 @@
     "ant-design-vue": "^4.0.0",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
     "sweetalert2": "^11.7.23",
     "vue": "^3.2.13",
