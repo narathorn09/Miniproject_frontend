@@ -1,23 +1,18 @@
 <template>
   <div class="container">
-    <a-float-button
-      type="primary"
-      @click="openModalAddReview"
-      style="right: 150px"
-    >
-      <template #icon> +</template></a-float-button
-    >
-
-    <h2 style="font-size: 30px">{{ boardGameData.title }}</h2>
-    <div style="display: flex; flex-direction: row; margin-top: 30px">
-      <a-col
-        style="
-          margin-right: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
+    <a-tooltip title="เพิ่มความคิดเห็น">
+      <a-float-button
+        type="primary"
+        @click="openModalAddReview"
+        class="float-button"
       >
+        <template #icon> +</template></a-float-button
+      >
+    </a-tooltip>
+
+    <h2 class="title-boardgame">{{ boardGameData.title }}</h2>
+    <div class="main-content">
+      <a-col class="img-container">
         <div class="card-img-container">
           <a-Image
             class="card-img"
@@ -70,10 +65,7 @@
             ><sapn>{{ review.user.username }}</sapn></template
           >
           <template #avatar>
-            <img
-              src="@/assets/person-comment.png"
-              alt="avatar"
-            />
+            <img src="@/assets/person-comment.png" alt="avatar" />
           </template>
           <template #content>
             <a-tag
@@ -109,7 +101,12 @@
         @finish="onEditReview"
         @finishFailed="onFinishFailed"
       >
-        <a-form-item label="คะแนนรีวิว" name="rating" labelAlign="left">
+        <a-form-item
+          label="คะแนนรีวิว"
+          name="rating"
+          labelAlign="left"
+          :rules="[{ required: true, message: 'กรุณาเพิ่มคะแนนรีวิว!' }]"
+        >
           <a-input-number
             :min="0"
             :max="10"
@@ -142,7 +139,12 @@
         autocomplete="off"
         @finish="onAddReview"
       >
-        <a-form-item label="คะแนนรีวิว" name="rating" labelAlign="left">
+        <a-form-item
+          label="คะแนนรีวิว"
+          name="rating"
+          labelAlign="left"
+          :rules="[{ required: true, message: 'กรุณาเพิ่มคะแนนรีวิว!' }]"
+        >
           <a-input-number
             :min="0"
             :max="10"
@@ -168,7 +170,6 @@ import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
 dayjs.locale("th");
-// import Swal from "sweetalert2";
 
 export default {
   name: "BoardGameDetailById",
@@ -183,13 +184,13 @@ export default {
       formState: {
         reviewId: null,
         userId: null,
-        rating: 0,
+        rating: null,
         comment: "",
       },
       formAdd: {
         reviewId: null,
         userId: null,
-        rating: 0,
+        rating: null,
         comment: "",
       },
     };
@@ -204,7 +205,7 @@ export default {
     resetFormAdd() {
       this.formAdd.reviewId = null;
       this.formAdd.userId = null;
-      this.formAdd.rating = 0;
+      this.formAdd.rating = null;
       this.formAdd.comment = "";
     },
 
@@ -315,7 +316,9 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await request.delete(`/review/${this.gameId}/${reviewId}`);
+            const response = await request.delete(
+              `/review/${this.gameId}/${reviewId}`
+            );
             if (response.status === 200) {
               Swal.fire({
                 title: "ลบสำเร็จ!",
@@ -366,6 +369,23 @@ export default {
   border-radius: 8px;
   background: #fff;
   padding: 40px;
+}
+.float-button {
+  right: 150px;
+}
+.title-boardgame {
+  font-size: 30px;
+}
+.main-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+}
+.img-container {
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .card-img-container {
   width: 300px;
